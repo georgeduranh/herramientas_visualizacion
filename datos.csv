@@ -76,26 +76,4 @@
 2020;Q 3;18,39;14,39;40,45;-8,55
 2020;Q 4;18,33;14,17;40,14;-8,92
 2021;Q 1;18,13;14,07;39,53;-4,3
-;;;;;
-;;;;;
-"Métrica:""Mujeres en paro""";;;;;
-"Fuente:""INE""";;;;;
-"Clasificación:""""";;;;;
-"Unidad:""Número de personas""";;;;;
-"Escala:""Unidades""";;;;;
-"EscalaFactorPotencia10:""0""";;;;;
-"SonDatosNumericos:""True""";;;;;
-;;;;;
-;;;;;
-"Métrica:""Hombres en paro""";;;;;
-"Fuente:""INE""";;;;;
-"Clasificación:""""";;;;;
-"Unidad:""Número de personas""";;;;;
-"Escala:""Unidades""";;;;;
-"EscalaFactorPotencia10:""0""";;;;;
-"SonDatosNumericos:""True""";;;;;
-;;;;;
-;;;;;
-"Url:""https://www.epdata.es/evolucion-paro-sexos/3d678d94-aa6f-4e00-b9b2-74ac4a44d454/espana/106""";;;;;
-"Titulo:""Evolución del paro, por sexos""";;;;;
-"Subtitulo:""""";;;;;
+
