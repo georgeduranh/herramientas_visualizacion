@@ -16,17 +16,20 @@ d3.json("../evolucion_del_paro_sexo_y_general.json").then(function(datos) {
         Metric.Datos.forEach(function(Anio) {
             datosCategoria.push({
                 categoria: Metric.Nombre,
-                anio: parseInt(Anio.Parametro),
+                anio: Anio.Agno,
                 valor: Anio.Valor,
-                Periodo: Anio.Periodo
+                Periodo: Anio.Periodo,
+                q: Anio.Periodo
 
             });
         });
     });
        
+
+    console.log(datosCategoria)
 	//Personalización de márgenes en el área de trabajo
-	var margin = {top: 20, right: 40, bottom: 90, left: 100},
-        width = 600 - margin.left - margin.right,
+	var margin = {top: 20, right: 40, bottom: 90, left: 40},
+        width = 1200 - margin.left - margin.right,
         height = 500 - margin.top - margin.bottom;
 
 	//Creación de objeto SVG para el body
@@ -38,26 +41,40 @@ d3.json("../evolucion_del_paro_sexo_y_general.json").then(function(datos) {
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");	
     
 	//Creación y visualización del eje horizontal (X) para la gráfica lineal
-    var x = d3.scaleLinear()
-              .domain(d3.extent(datosTotal, function(d) { return d.anio; }))
-              .range([ 0, width ]);    
+    var rango = []
+
+    for ( i =0; i< 77; i++){
+
+        rango.push(i*(width/70))
+    }
+    
+    var x = d3.scaleOrdinal()
+              .domain(datosTotal.map( function (d) { return d.Periodo; } ))
+              .range(rango);
 	
     svg.append("g")
        .attr("transform", "translate(0," + height + ")")
-       .call(d3.axisBottom(x));
+       .call(d3.axisBottom(x))
+       .selectAll("text")	
+            .style("text-anchor", "end")
+            .attr("dx", "-.8em")
+            .attr("dy", ".15em")
+            .attr("transform", function(d) {
+                return "rotate(-65)" 
+                });
 
     //Creación y visualización del eje vertical (Y) para la gráfica lineal
     var y = d3.scaleLinear()
-              .domain([0, d3.max(datosTotal, function(d) { return +d.valor; })*1.15])
+              .domain([0, d3.max(datosTotal, function(d) { return +d.valor; })])
               .range([ height, 0 ]); 
     
 	svg.append("g")
        .call(d3.axisLeft(y));
     
     svg.append("text")
-       .attr("x",-80)
+       .attr("x",-10)
        .attr("y",-8)
-       .text("% desempleo");
+       .text("%");
     
     //Creación de gráfica lineal
     svg.append("path")	
@@ -66,7 +83,7 @@ d3.json("../evolucion_del_paro_sexo_y_general.json").then(function(datos) {
        .attr("stroke", "#69b3a2")
        .attr("stroke-width", 1.5)
        .attr("d", d3.line()
-                    .x(function(d) { return x(d.anio) })		
+                    .x(function(d) { return x(d.Periodo) })		
                     .y(function(d) { return y(d.valor)})
             )
 	
@@ -106,20 +123,20 @@ d3.json("../evolucion_del_paro_sexo_y_general.json").then(function(datos) {
        .data(datosTotal)
        .enter()
        .append("circle")
-       .attr("cx", function(d) { return x(d.anio) } )
+       .attr("cx", function(d) { return x(d.Periodo) } )
        .attr("cy", function(d) { return y(d.valor) } )
        .attr("r", 3)
        .attr("fill", "#69b3a2")
        .on("mouseover", mouseover)
        .on("mousemove", d => {
-            pintarBarras(d.anio)
+            pintarBarras(d.anio, d.q)
             mousemove(d)})
        .on("mouseleave", mouseleave);
 		
 	//Creación de segundo SVG para la gráfica de barras
     var svg2 = d3.select("body")
                  .append("svg")
-		         .attr("width", width + margin.left + margin.right-200)
+		         .attr("width", width/2 + margin.left + margin.right-200)
 		         .attr("height", height + margin.top + margin.bottom)
 	             .append("g")
 		         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -139,7 +156,7 @@ d3.json("../evolucion_del_paro_sexo_y_general.json").then(function(datos) {
 	
 	//Función para el segundo tootltip cuando el cursor se posiciona sobre un punto del gráfico mostrando la información
     var mousemove2 = function(d) {
-        Tooltip2.html("<p style='color:#022920;'>A&ntilde;o: "+d.anio+"<br/> <b>"+d.valor.toFixed(2)+"</b> % Desempleo</p>")				
+        Tooltip2.html("<p style='color:#022920;'>A&ntilde;o: "+d.anio+"<br/> <b>"+d.valor.toFixed(2)+"</b> % Desempleo <br/> "+d.q+"</p> ")				
 				.style ("top", d3.event.pageY + 20 + "px")
 				.style ("left", d3.event.pageX + 20 + "px")
 				.transition()
@@ -156,7 +173,7 @@ d3.json("../evolucion_del_paro_sexo_y_general.json").then(function(datos) {
 	
 	//Creación y visualización del eje horizontal (X) para la gráfica de barras
     var x = d3.scaleBand()
-		      .range([ 0, width -200])
+		      .range([ 0, width/2 -200])
 		      .domain(datosCategoria.map(function(d) { return d.categoria; }))
 		      .padding(0.3);
     
@@ -176,15 +193,17 @@ d3.json("../evolucion_del_paro_sexo_y_general.json").then(function(datos) {
 	    .call(d3.axisLeft(y));
     
     svg2.append("text")
-        .attr("x",-80)
+        .attr("x", -10)
         .attr("y",-8 )
-        .text("% Desempleo");
+        .text("%");
 		  
 	//Función que realiza la gráfica de barras secundaria recibiendo como para parámetro el año a filtrar
-    function pintarBarras (vanio) {
+    function pintarBarras (vanio, vperiodo) {
         
         //Filtro de dataset con el año que se selecciona para pintar las barras
-		datosFiltrados = datosCategoria.filter(function (d) { return d.anio === vanio; });	
+		datosFiltrados = datosCategoria.filter(function (d) { return (d.anio === vanio & d.q == vperiodo); });	
+
+        console.log(datosFiltrados)
 
         //Creación de la gráfica de barras con el dataset del año seleccionado y actualización cuando se selecciona otro año
         var selection = svg2.selectAll("rect").data(datosFiltrados)
@@ -217,16 +236,21 @@ d3.json("../evolucion_del_paro_sexo_y_general.json").then(function(datos) {
             
             var datos = {
                 anio: item.Agno,
-                Periodo: item.Periodo,
-                valor: resultado.Valor,
+                Periodo: item.Agno+"-"+item.Periodo,
+                valor: item.Valor,
+                q : item.Periodo,
             }
+            
+
             resultados.push(datos)
         }
+        console.log("resultados")
+        console.log(resultados)
         return resultados
     }
 
 
-
+/* 
     var anosVector = [2002, 2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2021]
 
     for (var i = 0; i < anosVector.length; i++) {     
@@ -236,7 +260,7 @@ d3.json("../evolucion_del_paro_sexo_y_general.json").then(function(datos) {
         
 
     }
-
+ */
 
  
 
