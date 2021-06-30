@@ -36,7 +36,7 @@
         //width:400,
         //height:300};
         var options = {
-            width: 400,
+            width: 600,
             height: 240,
             title: 'Toppings I Like On My Pizza',
             colors: ['#e0440e', '#e6693e', '#ec8f6e', '#f3b49f', '#f6c7b6'],
@@ -44,8 +44,8 @@
         };
                     
 
-        // Instantiate and draw the chart for Sarah's pizza.
-        var chart = new google.visualization.PieChart(document.getElementById ('Sarah_chart_div'));
+        // Instantiate and draw the chart for Sarah's pizza. --> BAR 
+        var chart = new google.visualization.BarChart(document.getElementById ('Sarah_chart_div'));
         // Use previous data and options
         chart.draw(data, options);
         }

@@ -8,7 +8,7 @@
         // Load Charts and the corechart package.
         // This includes bar, column, line, area, stepped area, bubble, pie, donut, combo, candlestick, histogram y scatter
         // example of multiple packages google.charts.load('current', {packages: ['corechart', 'table', 'sankey']});
-        google.charts.load('current', {'packages':['corechart']});
+        google.charts.load('current', {'packages':['geochart']});
 
         // Draw the pie chart for Sarah's pizza when Charts is loaded.
         google.charts.setOnLoadCallback(drawChart);
@@ -17,18 +17,14 @@
         function drawChart() {
 
         // Create the data table for Sarah's pizza.
-        // DataTable es una estructura de datos con la que trabaja JavaScript, no muy diferente a lo que podría ser un array de arrays en Java o C.
-        var data = new google.visualization.DataTable();
-        //Add 2 columns 
-        data.addColumn('string', 'Topping');
-        data.addColumn('number', 'Slices');
-        //Add data to each row
-        data.addRows([
-        ['Mushrooms', 1],
-        ['Onions', 1],
-        ['Olives', 2],
-        ['Zucchini', 2],
-        ['Pepperoni', 1]
+        var data = google.visualization.arrayToDataTable([
+            ['Country', 'Popularity'],
+            ['Germany', 200],
+            ['United States', 300],
+            ['Brazil', 400],
+            ['Canada', 500],
+            ['France', 600],
+            ['RU', 700]
         ]);
 
         // Set options for Sarah's pie chart. title and dimensions
@@ -36,16 +32,14 @@
         //width:400,
         //height:300};
         var options = {
-            width: 400,
-            height: 240,
-            title: 'Toppings I Like On My Pizza',
-            colors: ['#e0440e', '#e6693e', '#ec8f6e', '#f3b49f', '#f6c7b6'],
-            //is3D: true
+            width: 600,
+            height: 640,
+            title: 'Geo chart'
         };
                     
 
-        // Instantiate and draw the chart for Sarah's pizza.
-        var chart = new google.visualization.PieChart(document.getElementById ('Sarah_chart_div'));
+        // Instantiate and draw the chart for Sarah's pizza. --> GEO
+        var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
         // Use previous data and options
         chart.draw(data, options);
         }
@@ -58,8 +52,10 @@
     <table class="columns">
     <tr>
     <!--Here we load our graph-->
-    <td><div id="Sarah_chart_div" style="border: 1px solid #ccc"></div></td>
+    <td><div id="regions_div" style="border: 1px solid #ccc"></div></td>
     </tr>
     </table>
 </body>
 </html>
+
+
