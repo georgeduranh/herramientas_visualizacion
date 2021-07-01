@@ -1,0 +1,49 @@
+<html>
+    <!-- Source: https://developers.google.com/chart/interactive/docs/reference#visdraw -->
+<head>
+<script type="text/javascript"
+src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    google.charts.load("current", {packages:["corechart"]});
+    google.setOnLoadCallback(drawChart);
+    // Asignar a la hoja de datos permisos de lectura Público en la web o Cualquiera con el enlace.
+    //Especificar los parámetros headers = N y gid=N.
+    //Headers indica cuantas filas son cabecera y por lo tanto deben excluirse como datos.
+    //Gid se refiere a la hoja a utilizar (en el caso de que el documento tuviera varias hojas).
+    function drawChart() {
+    var query = new google.visualization.Query(
+        'https://docs.google.com/spreadsheet/ccc?key=0Atw2BTU52lOCdEZpUlVIdmxGOWZBR2tuLXhYN2dQTWc&usp=drive_web#gid=0');
+
+        // Asignamos los datos al gráfico a través de la variable response. El objeto response se pasa a la función handleQueryResponse cuando se llama a la función 
+        //query.send. Las opciones de la gráfica se definen al llamar a la función draw.
+        query.send(handleQueryResponse);
+    }
+
+    // El resultado que se obtiene se envía a otra función llamada handleQueryResponse, cuya función es doble:
+    //Gestionar el error en la petición del documento. ¿Qué errores consideramos en este caso? Por ejemplo, que la URL del documento no sea correcta.
+    function handleQueryResponse(response) {
+    if (response.isError()) {
+        alert('Error in query: ' + response.getMessage() + ' ' +
+    response.getDetailedMessage());
+    return;
+    }
+
+    // data: alberga los datos a usar para dibujar la gráfica.
+    //options: mapa con duplas de valores en formato nombre y valor. 
+
+    var data = response.getDataTable();
+    var chart = new google.visualization.
+    ColumnChart(document.getElementById('columnchart'));
+   
+    chart.draw(data,  {x:200, y:400, title:'An Example'});
+    //chart.draw(data, { legend: { position: 'none' } });
+    }
+
+
+</script>
+<title>Data from a Spreadsheet</title>
+</head>
+<body>
+    <span id='columnchart'></span>
+</body>
+</html>

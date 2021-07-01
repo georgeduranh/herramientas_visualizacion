@@ -1,0 +1,40 @@
+<html>
+<head>
+    <title>Google Chart Example</title>
+<script type="text/javascript"
+src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
+</script>
+<script src="jquery.csv-0.71.js"></script>
+<script type="text/javascript"
+    src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+    google.charts.load("current", {packages:["corechart"]});
+    google.setOnLoadCallback(drawChart);
+    function drawChart() {
+    // grab the CSV
+    /* 
+    Lo más importante a tener en cuenta es que el $.get es un formato utilizado en jQuery. Esto crea una función y todo el código que va a continuación 
+    está contenido en dicha función:
+    En cierta manera, cuando vemos el símbolo $ es equivalente al document de JavaScript estándar. Quiere decir que vamos a hacer algo con el documento HTML.
+     El get realiza una petición http a la URL indicada.
+    A continuación es cuando la librería de jQuery para ficheros CSV nos ayuda, haciendo una llamada a csv.toArrays, transformamos el fichero CSV 
+    a un formato que es comprensible para la librería de Google Charts.
+    */
+    $.get("https://drive.google.com/file/d/1THRcL010ekgUy-hms-WUXQDGns8IH86I/view?usp=sharing", function(csvString) {
+    // Transformar CSV a array utilizando jQuery
+    var arrayData = $.csv.toArrays(csvString, {onParseValue:
+    $.csv.hooks.castToScalar});
+    // Convertir array a DataTable
+    var data = new google.visualization.arrayToDataTable(arrayData);
+    // Generar gráfica desde el DataTable
+    var chart = new
+    google.visualization.ColumnChart(document.getElementById('columnchart'));
+    chart.draw(data, { legend: { position: 'none' } });
+    });
+    }
+</script>
+</head>
+<body>
+    <div id="columnchart"></div>
+</body>
+</html>
